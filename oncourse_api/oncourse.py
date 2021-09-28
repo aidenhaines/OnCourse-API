@@ -1,17 +1,18 @@
 from json import loads
 import requests
-from bs4 import BeautifulSoup
-from re import compile, MULTILINE, DOTALL
+from re import MULTILINE, DOTALL, search
 
 
 class OnCourse:
-    def __init__(self, username:str, password:str):
-        self.username = username
+    def __init__(self, username: str, password: str):
+        self.username:str = username
+        """ Login Username """
         self.password = password
+        """ Login Password """
         self.cookie: str = self.getCookie()
         """ Returns OnCourse auth cookie """
         self.activeProfile: dict = self.activeProfile()
-        """ Returns OnCourse User Info """
+        """ Returns OnCourse active user Info """
         self.id: int = self.activeProfile["id"]
         """ Returns OnCourse User ID """
         self.name: int = self.activeProfile["name"]
@@ -24,12 +25,11 @@ class OnCourse:
         """ Returns School Name """
         self.reportCard: str = self.reportCard()
         """ Returns Report Card """
-        
 
     def getCookie(self) -> str:
         url = "https://www.oncourseconnect.com/account/login"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        data = {'Username': self.username, 'Password': self.password}
+        data = {"Username": self.username, "Password": self.password}
         session = requests.Session()
         session.post(url, headers=headers, data=data)
         oncourse_cookie = session.cookies["_occauth"]
@@ -39,10 +39,9 @@ class OnCourse:
         url = "https://www.oncourseconnect.com/#/studentdata"
         headers = {"Cookie": f"_occauth={self.cookie}"}
         source = (requests.get(url, headers=headers)).text
-        soup = BeautifulSoup(source, 'html.parser')
-        pattern = compile(r"window.activeProfile = {(.*)}", MULTILINE | DOTALL)
-        script = soup.find("script", type=r"text/javascript", text=pattern)
-        activeProfile = "{" + pattern.search(str(script)).group(1) + "}"
+        regex = r"window.activeProfile = {(.*)}"
+        windowActiveProfile = search(regex, source, MULTILINE)
+        activeProfile = "{" + windowActiveProfile.group(1) + "}"
         return loads(activeProfile)["activeStudent"]
 
     def reportCard(self) -> dict:
