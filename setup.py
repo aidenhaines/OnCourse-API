@@ -4,7 +4,7 @@ with open("README.md","r",encoding="utf-8") as f:
 
 setup(
     name="oncourse_api",
-    version="1.0.0",
+    version="1.0.1",
     description="A python api wrapper for OnCourse Connect",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -19,5 +19,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=["requests", "beautifulsoup4"],
+    install_requires=["requests"],
 )
