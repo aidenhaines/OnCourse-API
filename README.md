@@ -3,7 +3,7 @@
 
 # OnCourse-API
 
-OnCourse-API is a python library meant to make getting data from [OnCourse Connect](https://google.com) a simple task
+OnCourse-API is a python library meant to make getting data from [OnCourse Connect](https://www.oncourseconnect.com/) a simple task
 
 ## Installation
 
