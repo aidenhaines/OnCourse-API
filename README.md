@@ -1,8 +1,7 @@
-<div align="center">
-  <img style="vertical-align:middle; max-width: 60px" src="https://cdn.discordapp.com/attachments/848365417688203294/892262456271978566/oncourselogo.svg">
-  <span style="font-weight: bolder; font-size: 30px">OnCourse-API</span>
-</div>
-#
+
+  <img width="50px" src="https://cdn.discordapp.com/attachments/848365417688203294/892262456271978566/oncourselogo.svg">
+
+# OnCourse-API
 
 OnCourse-API is a python library meant to make getting data from [OnCourse Connect](https://google.com) a simple task
 
