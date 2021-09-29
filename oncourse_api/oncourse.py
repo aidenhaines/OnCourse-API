@@ -1,7 +1,7 @@
 from json import loads
 import requests
 from re import MULTILINE, search
-from .models.student import Student
+from .student import Student
 
 
 class OnCourse:
