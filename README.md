@@ -16,11 +16,13 @@ pip install oncourse_api
 ## Usage
 
 ```python
-from oncourse_api import OnCourse
+from oncourse_api.oncourse import OnCourse
 
-data = OnCourse("Username", "Password")
+data = OnCourse("HAI11350268", "C00lcrafter")
 
-print(data.schoolName)
+print(data.cookie)
+
+name = data.student.first_name
 ```
 
 ## Contributing
