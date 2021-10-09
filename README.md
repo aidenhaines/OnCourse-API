@@ -18,7 +18,7 @@ pip install oncourse_api
 ```python
 from oncourse_api.oncourse import OnCourse
 
-data = OnCourse("HAI11350268", "C00lcrafter")
+data = OnCourse("Username", "Password")
 
 print(data.cookie)
 
