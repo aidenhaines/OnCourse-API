@@ -20,9 +20,9 @@ class Student:
         self.requestSession = request_session
         self.classes = self.getClasses()
         self.assignments = self.getAssignments()
-        
+        self.assignment_titles = self.getAssignments(formatted)
 
-        self.studen_potriat = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
+        self.student_portrait = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
         self.reportCard = self.reportCard()
         
 
@@ -41,14 +41,16 @@ class Student:
         classes = (self.requestSession.get(url)).json()
         return classes
 
-    def getAssignments(self) -> dict:
+    def getAssignments(self, formatted=None) -> dict:
         today = date.today()
         startDate:str = today.strftime("%m/%d/%Y")
         endDate:str = str(today.month) + "/" + str(today.day) + "/" + str(today.year + 1)
         url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_student_work_due?endDate={endDate}&startDate={startDate}&studentId={self.id}"
         assignments = (self.requestSession.get(url)).json()
-        return assignments
-
-
-
-
+        if (formatted != None):
+            titles = []
+            for item in assignments:
+                titles.append(item.get("assignment_name"))
+            return titles
+        else:
+            return assignments
