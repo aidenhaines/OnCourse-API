@@ -5,6 +5,8 @@
 
 OnCourse-API is a python library meant to make getting data from [OnCourse Connect](https://www.oncourseconnect.com/) a simple task
 
+![PyPI](https://img.shields.io/pypi/v/oncourse-api) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/oncourse-api?color=blue)
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
@@ -20,13 +22,14 @@ from oncourse_api.oncourse import OnCourse
 
 data = OnCourse("Username", "Password")
 
-print(data.cookie)
+print(data.student) # Prints Student Name
 
-name = data.student.first_name
+assignments = data.student.assignments # Returns list of assignments
+
+# I love typehinting so your IDE should display options
 ```
 
 ## Contributing
-test
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 Please make sure to update tests as appropriate.
