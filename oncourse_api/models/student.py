@@ -1,6 +1,8 @@
 from datetime import date
+from typing import List
 
-from .assignments import Assignment
+from .assignment import Assignment
+from .group import Class
 
 class Student:
     """ Make the orginazation better for student """
@@ -20,7 +22,7 @@ class Student:
         self.school_id = school_id
         self.school_year_id = school_year_id
         self.requestSession = request_session
-        self.classes = self.getClasses()
+        self.classes = self.__getClasses()
         self.assignments = self.__getAssignments()
         """ Returns Assignmets in a list. Going back 7 days """
         self.student_portrait = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
@@ -37,12 +39,12 @@ class Student:
         attendance = (self.requestSession.get(url)).json()
         return attendance
 
-    def getClasses(self) -> dict:
+    def __getClasses(self) -> List['Class']:
         url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/classes/list_student_groups?showAll=N&studentId={self.id}"
         classes = (self.requestSession.get(url)).json()
-        return classes
+        return [Class(c, self.requestSession) for c in classes]
 
-    def __getAssignments(self) -> list:
+    def __getAssignments(self) -> List['Assignment']:
         today = date.today()
         startDate:str = str(today.month) + "/" + str(today.day - 7) + "/" + str(today.year)
         endDate:str = str(today.month) + "/" + str(today.day) + "/" + str(today.year + 1)
