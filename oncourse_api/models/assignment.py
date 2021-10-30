@@ -22,6 +22,9 @@ class OverviewAssignment:
         self.color_hex = assignment_dict['color_hex']
         self.is_late = self.__is_late()
 
+    def __str__(self) -> str:
+        return f"OverviewAssignment(type={self.type}, id={self.id}, name={self.name}, class_id={self.class_id}, class_name={self.class_name}, due_date={self.due_date}, late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule}, recurrence_end={self.recurrence_end}, is_missing={self.is_missing}, color={self.color}, color_hex={self.color_hex}, is_late={self.is_late})"
+
     def __is_late(self) -> bool:
         """
         Returns True if assignment is late
@@ -33,7 +36,6 @@ class OverviewAssignment:
         else:
             return False
 
-#{"lms_assign_id":2124527,"assignment_name":"CLASSWORK: Aperture Practice","group_name":"Digital Photography 04","assignment_description":"Complete both Aperture Tasks<br /><br />Put the photos in separate folders in your Shared Photo Folder<br /><br />Label them:<br /><br />Aperture Task 1<br />Aperture Task 2<br /><br />Mark as Done in On Course and they will be checked for credit.","due_date":"10/29/2021 11:59:00 PM","weight":"","external_guid":"a7827916-e84e-abe7-db73-42dcb608aa38","allow_resume":"Y","question_count":0,"late_assignment_mode":"M","grade_column":"","non_calculated":"N","view_column":"Allow_Submission","assessment_session":"","lms_lti_tool_id":"","lms_lti_tool_icon":"","lms_lti_tool_name":"","lms_lti_tool_embeddable":"","is_missing":"N","student_section_entry_date":"9/7/2021"}
 class ClassAssignment:
     def __init__(self, assignment_dict, request_session):
         self.requestSession = request_session
@@ -47,3 +49,5 @@ class ClassAssignment:
         self.allow_resume = assignment_dict['allow_resume']
         self.question_count = assignment_dict['question_count']
         
+    def __str__(self):
+        return f"ClassAssignment(id={self.id}, name={self.name}, class_name={self.class_name}, description={self.description}, due_date={self.due_date}, weight={self.weight}, external_guid={self.external_guid}, allow_resume={self.allow_resume}, question_count={self.question_count})"
