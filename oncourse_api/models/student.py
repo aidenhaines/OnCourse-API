@@ -1,5 +1,7 @@
 from datetime import date
 
+from .assignments import Assignment
+
 class Student:
     """ Make the orginazation better for student """
     def __init__(self, student: dict, school_id: int, school_year_id: int, request_session):
@@ -19,10 +21,9 @@ class Student:
         self.school_year_id = school_year_id
         self.requestSession = request_session
         self.classes = self.getClasses()
-        self.assignments = self.getAssignments()
-        
-
-        self.studen_potriat = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
+        self.assignments = self.__getAssignments()
+        """ Returns Assignmets in a list. Going back 7 days """
+        self.student_portrait = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
         self.reportCard = self.reportCard()
         
 
@@ -41,14 +42,10 @@ class Student:
         classes = (self.requestSession.get(url)).json()
         return classes
 
-    def getAssignments(self) -> dict:
+    def __getAssignments(self) -> list:
         today = date.today()
-        startDate:str = today.strftime("%m/%d/%Y")
+        startDate:str = str(today.month) + "/" + str(today.day - 7) + "/" + str(today.year)
         endDate:str = str(today.month) + "/" + str(today.day) + "/" + str(today.year + 1)
         url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_student_work_due?endDate={endDate}&startDate={startDate}&studentId={self.id}"
         assignments = (self.requestSession.get(url)).json()
-        return assignments
-
-
-
-
+        return [Assignment(a, self.requestSession) for a in assignments]

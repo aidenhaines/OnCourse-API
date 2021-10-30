@@ -15,19 +15,19 @@ class OnCourse:
         """ Login Username """
         self.password = password
         """ Login Password """
-        self.cookie: str = self.getCookie()
+        self.cookie: str = self.__getCookie()
         """ Returns OnCourse auth cookie """
 
         # Active Profile
-        self.active_profile: dict = self.getActiveProfile()
+        self.active_profile: dict = self.__getActiveProfile()
         """ Returns OnCourse active user Info """
 
         # Student of active profile
-        self.student: Student = self.getStudent()
+        self.student: Student = self.__getStudent()
         """ Returns OnCourse Active Ids """
 
 
-    def getCookie(self) -> bool:
+    def __getCookie(self) -> bool:
         url = "https://www.oncourseconnect.com/account/login"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
         data = {"Username": self.username, "Password": self.password}
@@ -36,7 +36,7 @@ class OnCourse:
         self.requestSession.headers.update({"Cookie": f"_occauth={oncourse_cookie}"})
         return oncourse_cookie
 
-    def getActiveProfile(self) -> int:
+    def __getActiveProfile(self) -> int:
         url = "https://www.oncourseconnect.com/#/studentdata"
         source = (self.requestSession.get(url)).text
         regex = r"window.activeProfile = {(.*)}"
@@ -45,7 +45,7 @@ class OnCourse:
         active_profile = loads(active_profile)["activeStudent"]
         return active_profile
 
-    def getStudent(self) -> Student:
+    def __getStudent(self) -> Student:
         url = f"https://www.oncourseconnect.com/api/classroom/dashboard/get_student_information?studentId={self.active_profile['id']}"
         student = self.requestSession.get(url)
         return Student(student.json()["ReturnValue"], self.active_profile["schoolId"],  self.active_profile["schoolYearId"], self.requestSession)
