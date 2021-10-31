@@ -5,7 +5,7 @@ from .assignment import OverviewAssignment
 from .group import Class
 
 class Student:
-    """ Make the orginazation better for student """
+    """ Make the organization better for student """
     def __init__(self, student: dict, school_id: int, school_year_id: int, request_session):
         self.first_name = student["first_name"]
         self.last_name = student["last_name"]
@@ -24,7 +24,7 @@ class Student:
         self.requestSession = request_session
         self.classes = self.__getClasses()
         self.assignments = self.__getAssignments()
-        """ Returns Assignmets in a list. Going back 7 days """
+        """ Returns Assignments in a list. Going back 7 days """
         self.student_portrait = f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
         self.reportCard = self.reportCard()
 

@@ -23,7 +23,8 @@ class Class:
         return f"Class(id={self.id}, name={self.name}, marking_period_name={self.marking_period_name}, current_grade={self.current_grade}, teacher_name={self.teacher_name}, teacher_id={self.teacher_id}, color_hex={self.color_hex}, active={self.active})"
 
     def getAssignments(self) -> List['ClassAssignment']:
-        print(f"Getting assignments for class {self.name}")
+        #print(f"Getting assignments for class {self.name}")
+        #^ I guess unneccesary? This function returns objects, not output so I don't think the announcement is necessary
         url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing?assignmentType=A&groupId={self.id}&studentId={self.__student_id}"
         assignments = (self.requestSession.get(url)).json()
         if len(assignments) == 0:
