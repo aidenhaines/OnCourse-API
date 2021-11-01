@@ -6,6 +6,7 @@ from setuptools import find_packages, setup
 with open("pyproject.toml", "rb") as f:
     pyproject = tomli.load(f)
 
+
 setup(
     name=pyproject["tool"]["poetry"]["name"],
     version=pyproject["tool"]["poetry"]["version"],
