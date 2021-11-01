@@ -6,7 +6,6 @@ from setuptools import find_packages, setup
 with open("pyproject.toml", "rb") as f:
     pyproject = tomli.load(f)
 
-
 setup(
     name=pyproject["tool"]["poetry"]["name"],
     version=pyproject["tool"]["poetry"]["version"],
@@ -26,4 +25,5 @@ setup(
     install_requires=(Path(__file__).parent / "requirements.txt")
     .read_text("utf-8")
     .splitlines(),
+    include_package_data=True,
 )
