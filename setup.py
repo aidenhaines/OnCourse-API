@@ -1,4 +1,5 @@
 from distutils.core import setup
+from setuptools import find_packages
 with open("README.md","r",encoding="utf-8") as f:
     long_description=f.read()
 
@@ -12,7 +13,7 @@ setup(
     author="Wolfhound905",
     author_email="aiden8green@gmail.com",
     license="MIT",
-    packages=["oncourse_api"],
+    packages=find_packages(exclude=["test", "tests", "tests.*"]),#["oncourse_api, oncourse_api.models"],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 4 - Beta",
