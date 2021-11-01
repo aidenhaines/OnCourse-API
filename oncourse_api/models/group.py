@@ -22,6 +22,9 @@ class Class:
     def __str__(self):
         return f"Class(id={self.id}, name={self.name}, marking_period_name={self.marking_period_name}, current_grade={self.current_grade}, teacher_name={self.teacher_name}, teacher_id={self.teacher_id}, color_hex={self.color_hex}, active={self.active})"
 
+    def __repr__(self):
+        return f"{self.name}"
+
     def getAssignments(self) -> List['ClassAssignment']:
         #print(f"Getting assignments for class {self.name}")
         #^ I guess unneccesary? This function returns objects, not output so I don't think the announcement is necessary

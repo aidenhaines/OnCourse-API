@@ -25,6 +25,9 @@ class OverviewAssignment:
     def __str__(self) -> str:
         return f"OverviewAssignment(type={self.type}, id={self.id}, name={self.name}, class_id={self.class_id}, class_name={self.class_name}, due_date={self.due_date}, late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule}, recurrence_end={self.recurrence_end}, is_missing={self.is_missing}, color={self.color}, color_hex={self.color_hex}, is_late={self.is_late})"
 
+    def __repr__(self):
+        return f"{self.name}"
+
     def __is_late(self) -> bool:
         """
         Returns True if assignment is late
@@ -51,3 +54,6 @@ class ClassAssignment:
         
     def __str__(self):
         return f"ClassAssignment(id={self.id}, name={self.name}, class_name={self.class_name}, description={self.description}, due_date={self.due_date}, weight={self.weight}, external_guid={self.external_guid}, allow_resume={self.allow_resume}, question_count={self.question_count})"
+    
+    def __repr__(self):
+        return f"{self.name}"
