@@ -1,7 +1,7 @@
 
 [tool.poetry]
 name = "oncourse-api"
-version = "2.1.4"
+version = "2.1.5"
 description = "A python api wrapper for OnCourse Connect"
 authors = ["Aiden <aiden8green@gmail.com>"]
 license = "MIT"
