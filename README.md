@@ -24,7 +24,7 @@ data = OnCourse("Username", "Password")
 
 print(data.student) # Prints Student Name
 
-assignments = data.student.assignments # Returns list of assignments
+assignments = data.student.getAssignments() # Returns list of assignments
 
 # I love typehinting so your IDE should display options
 ```
