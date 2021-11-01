@@ -24,6 +24,6 @@ setup(
         "Operating System :: OS Independent",
     ],
     install_requires=(Path(__file__).parent / "requirements.txt")
-    .read_text()
+    .read_text("utf-8")
     .splitlines(),
 )
