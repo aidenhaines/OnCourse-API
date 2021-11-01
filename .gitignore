@@ -2,8 +2,8 @@
 .vscode/
 
 # Testing
-testing.py
-testing1.py
+/tests
+
 ## Auto Generated ##
 # Byte-compiled / optimized / DLL files
 __pycache__/
