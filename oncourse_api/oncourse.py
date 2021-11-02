@@ -43,9 +43,7 @@ class OnCourse:
             locked_out = r"(\d+) attempts remaining before your account will be temporarily locked out for (\d+)"
             locked_out = search(locked_out, resp.text, MULTILINE)
             if locked_out.group(1) and locked_out.group(2):
-                raise InvalidPassword(
-                    f"Password incorrect. {locked_out.group()} minute(s)"
-                )
+                raise InvalidPassword(f"Password incorrect. {locked_out.group()} minute(s)")
 
         elif "Due to numerous incorrect attempts" in resp.text:  # Locked out
             duration = r"temporarily locked out for (\d+)"
@@ -70,7 +68,10 @@ class OnCourse:
         return active_profile
 
     def __getStudent(self) -> Student:
-        url = f"https://www.oncourseconnect.com/api/classroom/dashboard/get_student_information?studentId={self.active_profile['id']}"
+        url = (
+            "https://www.oncourseconnect.com/api/classroom/dashboard/get_student_information"
+            f"?studentId={self.active_profile['id']}"
+        )
         student = self.requestSession.get(url)
         return Student(
             student.json()["ReturnValue"],

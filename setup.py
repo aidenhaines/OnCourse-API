@@ -22,8 +22,6 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    install_requires=(Path(__file__).parent / "requirements.txt")
-    .read_text("utf-8")
-    .splitlines(),
+    install_requires=(Path(__file__).parent / "requirements.txt").read_text("utf-8").splitlines(),
     include_package_data=True,
 )
