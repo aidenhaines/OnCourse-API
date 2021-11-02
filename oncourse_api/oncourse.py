@@ -1,18 +1,20 @@
 import logging
 from json import loads
 from re import MULTILINE, search
-from typing import List, Union
+from typing import Union
 
 import requests
 
 from oncourse_api.errors import InvalidCredentials, InvalidPassword, LockedOut
 
 from .models.student import Student
+from .models.active_profile import ActiveProfile
 
 
 logger_name = "oncourse_api"
 
 log = logging.getLogger(logger_name)
+
 
 class OnCourse:
     def __init__(self, username: str, password: str):
@@ -27,12 +29,6 @@ class OnCourse:
         """ Login Password """
         self.cookie: str = self.__getCookie()
         """ Returns OnCourse auth cookie """
-
-        # Active Profile
-        self.active_profile: dict = self.__getActiveProfile()
-        """ Returns OnCourse active user Info """
-
-        # Student of active profile
 
     def __getCookie(self) -> bool:
         url = "https://www.oncourseconnect.com/account/login"
@@ -64,13 +60,17 @@ class OnCourse:
         self.requestSession.headers.update({"Cookie": f"_occauth={oncourse_cookie}"})
         return oncourse_cookie
 
-    def __getActiveProfile(self) -> int:
+    @property
+    def active_profile(self) -> ActiveProfile:
+        """ Request active profile 
+        
+        returns:
+            'ActiveProfile'
+        """
         url = "https://www.oncourseconnect.com/#/studentdata"
         source = (self.requestSession.get(url)).text
         regex = r"window.activeProfile = {(.*)}"
         windowActiveProfile = search(regex, source, MULTILINE)
-        active_profile = "{" + windowActiveProfile.group(1) + "}"
-        active_profile = loads(active_profile)
+        active_profile = loads("{" + windowActiveProfile.group(1) + "}")
         log.info(f"Logged in as: {active_profile['fullName']}")
-        return active_profile
-
+        return ActiveProfile(active_profile, self.requestSession)
