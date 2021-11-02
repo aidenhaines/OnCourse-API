@@ -62,8 +62,8 @@ class OnCourse:
 
     @property
     def active_profile(self) -> ActiveProfile:
-        """ Request active profile 
-        
+        """Request active profile
+
         returns:
             'ActiveProfile'
         """
