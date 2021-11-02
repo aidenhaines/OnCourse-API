@@ -12,21 +12,23 @@ OnCourse-API is a python library meant to make getting data from [OnCourse Conne
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
 
 ```bash
-pip install oncourse_api
+pip install oncourse-api
 ```
 
 ## Usage
 
 ```python
-from oncourse_api.oncourse import OnCourse
+from oncourse_api import OnCourse
 
-data = OnCourse("Username", "Password")
+account = OnCourse("Username", "Password")
 
-print(data.student) # Prints Student Name
+student = account.active_profile.student
 
-assignments = data.student.getAssignments() # Returns list of assignments
+print(student) # Prints Student Name
 
-# I love typehinting so your IDE should display options
+assignments = student.assignments # Returns list of assignments
+
+# I love typehinting so your IDE should display options for everything
 ```
 
 ## Contributing

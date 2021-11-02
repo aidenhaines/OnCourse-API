@@ -1,4 +1,3 @@
-from datetime import date
 from typing import List
 from oncourse_api.errors import NoAssignments
 
@@ -20,15 +19,23 @@ class Class:
         self.active = True if class_dict["active"] == "Y" else False
 
     def __str__(self):
-        return f"Class(id={self.id}, name={self.name}, marking_period_name={self.marking_period_name}, current_grade={self.current_grade}, teacher_name={self.teacher_name}, teacher_id={self.teacher_id}, color_hex={self.color_hex}, active={self.active})"
+        return (
+            f"Class(id={self.id}, name={self.name}, marking_period_name={self.marking_period_name},"
+            f" current_grade={self.current_grade}, teacher_name={self.teacher_name}, teacher_id={self.teacher_id},"
+            f" color_hex={self.color_hex}, active={self.active})"
+        )
 
     def __repr__(self):
         """Returns name when printed in a list"""
         return f"{self.name}"
 
-    def getAssignments(self) -> List["ClassAssignment"]:
+    @property
+    def assignments(self) -> List["ClassAssignment"]:
         """Returns a list of assignements in a class"""
-        url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing?assignmentType=A&groupId={self.id}&studentId={self.__student_id}"
+        url = (
+            "https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing"
+            f"?assignmentType=A&groupId={self.id}&studentId={self.__student_id}"
+        )
         assignments = (self.requestSession.get(url)).json()
         if len(assignments) == 0:
             raise NoAssignments(f"No assignments found for {self.name}")

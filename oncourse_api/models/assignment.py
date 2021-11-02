@@ -21,7 +21,13 @@ class OverviewAssignment:
         self.is_late = self.__is_late()
 
     def __str__(self) -> str:
-        return f"OverviewAssignment(type={self.type}, id={self.id}, name={self.name}, class_id={self.class_id}, class_name={self.class_name}, due_date={self.due_date}, late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule}, recurrence_end={self.recurrence_end}, is_missing={self.is_missing}, color={self.color}, color_hex={self.color_hex}, is_late={self.is_late})"
+        return (
+            f"OverviewAssignment(type={self.type}, id={self.id}, name={self.name}, class_id={self.class_id},"
+            f" class_name={self.class_name}, due_date={self.due_date},"
+            f" late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule},"
+            f" recurrence_end={self.recurrence_end}, is_missing={self.is_missing}, color={self.color},"
+            f" color_hex={self.color_hex}, is_late={self.is_late})"
+        )
 
     def __repr__(self):
         return f"{self.name}"
@@ -54,7 +60,12 @@ class ClassAssignment:
         self.question_count = assignment_dict["question_count"]
 
     def __str__(self):
-        return f"ClassAssignment(id={self.id}, name={self.name}, class_name={self.class_name}, description={self.description}, due_date={self.due_date}, weight={self.weight}, external_guid={self.external_guid}, allow_resume={self.allow_resume}, question_count={self.question_count})"
+        return (
+            f"ClassAssignment(id={self.id}, name={self.name}, class_name={self.class_name},"
+            f" description={self.description}, due_date={self.due_date}, weight={self.weight},"
+            f" external_guid={self.external_guid}, allow_resume={self.allow_resume},"
+            f" question_count={self.question_count})"
+        )
 
     def __repr__(self):
         return f"{self.name}"
