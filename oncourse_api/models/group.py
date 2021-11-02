@@ -29,7 +29,8 @@ class Class:
         """Returns name when printed in a list"""
         return f"{self.name}"
 
-    def getAssignments(self) -> List["ClassAssignment"]:
+    @property
+    def assignments(self) -> List["ClassAssignment"]:
         """Returns a list of assignements in a class"""
         url = (
             "https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing"
