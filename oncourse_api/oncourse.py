@@ -1,10 +1,18 @@
+import logging
 from json import loads
-import requests
 from re import MULTILINE, search
+from typing import List, Union
+
+import requests
 
 from oncourse_api.errors import InvalidCredentials, InvalidPassword, LockedOut
+
 from .models.student import Student
 
+
+logger_name = "oncourse_api"
+
+log = logging.getLogger(logger_name)
 
 class OnCourse:
     def __init__(self, username: str, password: str):
@@ -13,9 +21,9 @@ class OnCourse:
         """ Start the request session """
 
         # Login Info
-        self.username: str = username
+        self.__username: str = username
         """ Login Username """
-        self.password = password
+        self.__password = password
         """ Login Password """
         self.cookie: str = self.__getCookie()
         """ Returns OnCourse auth cookie """
@@ -25,19 +33,17 @@ class OnCourse:
         """ Returns OnCourse active user Info """
 
         # Student of active profile
-        self.student: Student = self.__getStudent()
-        """ Returns OnCourse Active Ids """
 
     def __getCookie(self) -> bool:
         url = "https://www.oncourseconnect.com/account/login"
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        data = {"Username": self.username, "Password": self.password}
+        data = {"Username": self.__username, "Password": self.__password}
         resp = self.requestSession.post(url, headers=headers, data=data)
 
         # Check for invalid credentials
 
         if "Invalid username or password." in resp.text:  # Incorrect username
-            raise InvalidCredentials(f"No user '{self.username}' was found.")
+            raise InvalidCredentials(f"No user '{self.__username}' was found.")
 
         elif "Username or password was invalid." in resp.text:  # Incorrect password
             locked_out = r"(\d+) attempts remaining before your account will be temporarily locked out for (\d+)"
@@ -64,18 +70,7 @@ class OnCourse:
         regex = r"window.activeProfile = {(.*)}"
         windowActiveProfile = search(regex, source, MULTILINE)
         active_profile = "{" + windowActiveProfile.group(1) + "}"
-        active_profile = loads(active_profile)["activeStudent"]
+        active_profile = loads(active_profile)
+        log.info(f"Logged in as: {active_profile['fullName']}")
         return active_profile
 
-    def __getStudent(self) -> Student:
-        url = (
-            "https://www.oncourseconnect.com/api/classroom/dashboard/get_student_information"
-            f"?studentId={self.active_profile['id']}"
-        )
-        student = self.requestSession.get(url)
-        return Student(
-            student.json()["ReturnValue"],
-            self.active_profile["schoolId"],
-            self.active_profile["schoolYearId"],
-            self.requestSession,
-        )

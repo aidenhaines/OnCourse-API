@@ -9,18 +9,18 @@ class Student:
     """Make the organization better for student"""
 
     def __init__(self, student: dict, school_id: int, school_year_id: int, request_session):
-        self.first_name = student["first_name"]
-        self.last_name = student["last_name"]
-        self.email = student["email"]
-        self.phone = student["phone"]
-        self.street_address1 = student["street_address1"]
-        self.street_address2 = student["street_address2"]
-        self.city = student["city"]
-        self.state = student["state"]
-        self.postal_code = student["postal_code"]
-        self.grade_level = student["grade_level"]
-        self.school_name = student["school"]
-        self.id = student["id"]
+        self.first_name: str = student["first_name"]
+        self.last_name: str = student["last_name"]
+        self.email: str = student["email"]
+        self.phone: str = student["phone"]
+        self.street_address1 = student["street_address1"] if student["street_address1"] != "" else None
+        self.street_address2 = student["street_address2"] if student["street_address2"] != "" else None
+        self.city = student["city"] if student["city"] != "" else None
+        self.state = student["state"] if student["state"] != "" else None
+        self.postal_code = student["postal_code"] if student["postal_code"] != "" else None
+        self.grade_level = student["grade_level"] if student["grade_level"] != "" else None
+        self.school_name = student["school"] if student["school"] != "" else None
+        self.id: int = student["id"]
         self.school_id = school_id
         self.school_year_id = school_year_id
         self.requestSession = request_session
@@ -30,6 +30,9 @@ class Student:
         )
 
     def __str__(self):
+        return f"{self.first_name} {self.last_name}"
+
+    def __repr__(self):
         return f"{self.first_name} {self.last_name}"
 
     def getReportCard(self) -> dict:
