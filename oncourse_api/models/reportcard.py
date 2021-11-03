@@ -29,7 +29,5 @@ class ReportCard:
             for item in gradelist:
                 grade = item[-1].get("grade")
                 classname = item[0].get('class')
-                print(grade)
-                print(classname)
                 grades[classname] = grade
         return grades
