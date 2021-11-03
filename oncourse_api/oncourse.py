@@ -1,13 +1,11 @@
 import logging
 from json import loads
 from re import MULTILINE, search
-from typing import Union
 
 import requests
 
 from oncourse_api.errors import InvalidCredentials, InvalidPassword, LockedOut
 
-from .models.student import Student
 from .models.active_profile import ActiveProfile
 
 
@@ -56,7 +54,7 @@ class OnCourse:
 
         # -------------------------------------
 
-        oncourse_cookie = self.requestSession.cookies["_occauth"]
+        oncourse_cookie = self.requestSession.cookies.get("_occauth")
         self.requestSession.headers.update({"Cookie": f"_occauth={oncourse_cookie}"})
         return oncourse_cookie
 
@@ -72,5 +70,5 @@ class OnCourse:
         regex = r"window.activeProfile = {(.*)}"
         windowActiveProfile = search(regex, source, MULTILINE)
         active_profile = loads("{" + windowActiveProfile.group(1) + "}")
-        log.info(f"Logged in as: {active_profile['fullName']}")
+        log.info(f"Logged in as: {active_profile.get('fullName')}")
         return ActiveProfile(active_profile, self.requestSession)
