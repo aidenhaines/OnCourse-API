@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class OverviewAssignment:
-    """A basic form of assignment with misalanious info"""
+    """A basic form of assignment with miscellaneous info"""
 
     def __init__(self, assignment_dict, request_session):
         self.requestSession = request_session
