@@ -39,7 +39,8 @@ class Student:
         # TODO Make model
         url = f"https://www.oncourseconnect.com/api/classroom/grades/report_cards?schoolId={self.school_id}&schoolYearId={self.school_year_id}&studentId={self.id}"
         report_card = (self.requestSession.get(url)).json()
-        return report_card
+        return ReportCard(report_card, self.__active_profile, self.requestSession)
+        #return report_card
 
     @property
     def attendance(self) -> dict:
