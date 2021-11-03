@@ -18,7 +18,6 @@ class OverviewAssignment:
         self.is_missing = assignment_dict["is_missing"]
         self.color = assignment_dict["color"]
         self.color_hex = assignment_dict["color_hex"]
-        self.is_late = self.__is_late()
 
     def __str__(self) -> str:
         return (
@@ -32,7 +31,8 @@ class OverviewAssignment:
     def __repr__(self):
         return f"{self.name}"
 
-    def __is_late(self) -> bool:
+    @property
+    def is_late(self) -> bool:
         """
         Returns True if assignment is late
         """
@@ -49,15 +49,15 @@ class ClassAssignment:
 
     def __init__(self, assignment_dict, request_session):
         self.requestSession = request_session
-        self.id = assignment_dict["lms_assign_id"]
-        self.name = assignment_dict["assignment_name"]
-        self.class_name = assignment_dict["group_name"]
-        self.description = assignment_dict["assignment_description"]
-        self.due_date = assignment_dict["due_date"]
-        self.weight = assignment_dict["weight"]
-        self.external_guid = assignment_dict["external_guid"]
-        self.allow_resume = assignment_dict["allow_resume"]
-        self.question_count = assignment_dict["question_count"]
+        self.id = assignment_dict.get("lms_assign_id")
+        self.name = assignment_dict.get("assignment_name")
+        self.class_name = assignment_dict.get("group_name")
+        self.description = assignment_dict.get("assignment_description")
+        self.due_date = assignment_dict.get("due_date")
+        self.weight = assignment_dict.get("weight")
+        self.external_guid = assignment_dict.get("external_guid")
+        self.allow_resume = assignment_dict.get("allow_resume")
+        self.question_count = assignment_dict.get("question_count")
 
     def __str__(self):
         return (

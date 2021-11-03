@@ -8,15 +8,15 @@ class Class:
     def __init__(self, class_dict, student_id, request_session):
         self.requestSession = request_session
         self.__student_id = student_id
-        self.id: int = class_dict["id"]
-        self.name: str = class_dict["name"]
-        self.unread_messages = class_dict["unread_messages"]
-        self.marking_period_name = class_dict["marking_period_name"]
-        self.current_grade = class_dict["current_grade"]
-        self.teacher_name = class_dict["teacher_name"]
-        self.teacher_id: int = class_dict["teacher_id"]
-        self.color_hex: str = class_dict["color_hex"]
-        self.active = True if class_dict["active"] == "Y" else False
+        self.id: int = class_dict.get("id")
+        self.name: str = class_dict.get("name")
+        self.unread_messages = class_dict.get("unread_messages")
+        self.marking_period_name = class_dict.get("marking_period_name")
+        self.current_grade = class_dict.get("current_grade")
+        self.teacher_name = class_dict.get("teacher_name")
+        self.teacher_id: int = class_dict.get("teacher_id")
+        self.color_hex: str = class_dict.get("color_hex")
+        self.active = True if class_dict.get("active") == "Y" else False
 
     def __str__(self):
         return (
