@@ -40,12 +40,6 @@ class ActiveProfile:
             for student in self.students:
                 retrieved_student = self.requestSession.get(url.format(student_id=student["id"])).json()["ReturnValue"]
                 students.append(
-                    Student(
-                        retrieved_student,
-                        student["schoolId"],
-                        student["schoolYearId"],
-                        self,
-                        self.requestSession,
-                    )
+                    Student(retrieved_student, student["schoolId"], student["schoolYearId"], self, self.requestSession)
                 )
             return students
