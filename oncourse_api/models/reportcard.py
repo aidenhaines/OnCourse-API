@@ -13,14 +13,23 @@ class ReportCard:
         return classes
     
     def __getCurrentGrade(self, report):
-        grades = []
-        gradelist = classes.dict.get("report_cards")[0].get("rows")
+        grades = {}
+        foo = 0 
+        gradelist = report.get("report_cards")[0].get("rows")
         for item in gradelist:
-            foo = 0
-            for item2 in gradelist:
+            foo = 0 
+            for item2 in item:
                 if item2.get("grade") == "": 
                     foo = foo - 1 
-                    grades.append(item[foo].get("grade"))
+                    grades[item[0].get('class')] = item[foo].get("grade")
+                    #grades.append(item[foo].get("grade"))
                     break
                 foo = foo + 1 
+        if grades == {}: 
+            for item in gradelist:
+                grade = item[-1].get("grade")
+                classname = item[0].get('class')
+                print(grade)
+                print(classname)
+                grades[classname] = grade
         return grades
