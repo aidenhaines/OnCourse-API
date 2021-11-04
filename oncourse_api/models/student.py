@@ -5,6 +5,7 @@ from .assignment import OverviewAssignment
 from .group import Class
 from .reportcard import ReportCard
 
+
 class Student:
     """Make the organization better for student"""
 
