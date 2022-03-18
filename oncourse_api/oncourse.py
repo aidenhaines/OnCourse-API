@@ -71,4 +71,5 @@ class OnCourse:
         windowActiveProfile = search(regex, source, MULTILINE)
         active_profile = loads("{" + windowActiveProfile.group(1) + "}")
         log.info(f"Logged in as: {active_profile.get('fullName')}")
-        return ActiveProfile(active_profile, self.requestSession)
+        active_profile["requestSession"] = self.requestSession
+        return ActiveProfile.from_dict(active_profile, active_profile)

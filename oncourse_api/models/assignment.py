@@ -1,29 +1,51 @@
 from datetime import datetime
+from typing import TYPE_CHECKING
+
+from attr import define
+import attr
+
+from oncourse_api.utils.converters import timestamp_converter
+
+from oncourse_api.models.base import OncourseObject
+
+if TYPE_CHECKING:
+    from oncourse_api.models.active_profile import ActiveProfile
 
 
-class OverviewAssignment:
+@define
+class OverviewAssignment(OncourseObject):
     """A basic form of assignment with miscellaneous info"""
 
-    def __init__(self, assignment_dict, request_session):
-        self.requestSession = request_session
-        self.type = assignment_dict["assignment_type"]
-        self.id = assignment_dict["assignment_id"]
-        self.name = assignment_dict["assignment_name"]
-        self.class_id = assignment_dict["group_id"]
-        self.class_name = assignment_dict["group_name"]
-        self.due_date = assignment_dict["due_date"]
-        self.late_assignment_mode = assignment_dict["late_assignment_mode"]
-        self.rrule = assignment_dict["rrule"]
-        self.recurrence_end = assignment_dict["recurrence_end"]
-        self.is_missing = assignment_dict["is_missing"]
-        self.color = assignment_dict["color"]
-        self.color_hex = assignment_dict["color_hex"]
+    type: str = attr.ib(default=None)
+    assignment_id: int = attr.ib(default=None)
+    assignment_name: str = attr.ib(default=None)
+    group_id: int = attr.ib(default=None)
+    group_name: str = attr.ib(default=None)
+    due_date: datetime = attr.ib(default=None, converter=timestamp_converter)
+    late_assignment_mode: str = attr.ib(default=None)
+    rrule: str = attr.ib(default=None)
+    recurrence_end: str = attr.ib(default=None)
+    is_missing: bool = attr.ib(default=None)
+    is_late: bool = attr.ib(default=None)
+    color: str = attr.ib(default=None)
+    color_hex: str = attr.ib(default=None)
+
+    @classmethod
+    def _process_dict(cls, data: dict, active_profile: "ActiveProfile") -> "OverviewAssignment":
+        if data.get("is_missing") == "Y":
+            data["is_missing"] = True
+        else:
+            data["is_missing"] = False
+
+        data["is_late"] = True if timestamp_converter(data.get("due_date")) < datetime.now() else False
+
+        return data
 
     def __str__(self) -> str:
         return (
-            f"OverviewAssignment(type={self.type}, id={self.id}, name={self.name}, class_id={self.class_id},"
-            f" class_name={self.class_name}, due_date={self.due_date},"
-            f" late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule},"
+            f"OverviewAssignment(type={self.type}, assignment_id={self.assignment_id},"
+            f" assignment_name={self.assignment_name}, group_id={self.group_id}, group_name={self.group_name},"
+            f" due_date={self.due_date}, late_assignment_mode={self.late_assignment_mode}, rrule={self.rrule},"
             f" recurrence_end={self.recurrence_end}, is_missing={self.is_missing}, color={self.color},"
             f" color_hex={self.color_hex}, is_late={self.is_late})"
         )
@@ -31,33 +53,32 @@ class OverviewAssignment:
     def __repr__(self):
         return f"{self.name}"
 
-    @property
-    def is_late(self) -> bool:
-        """
-        Returns True if assignment is late
-        """
-        due_date = datetime.strptime(self.due_date, "%m/%d/%Y %I:%M:%S %p")
-        now = datetime.now()
-        if due_date < now:
-            return True
-        else:
-            return False
 
-
-class ClassAssignment:
+@define
+class ClassAssignment(OncourseObject):
     """This assignment comes from a class/group and returns more data about the assignment"""
 
-    def __init__(self, assignment_dict, request_session):
-        self.requestSession = request_session
-        self.id = assignment_dict.get("lms_assign_id")
-        self.name = assignment_dict.get("assignment_name")
-        self.class_name = assignment_dict.get("group_name")
-        self.description = assignment_dict.get("assignment_description")
-        self.due_date = assignment_dict.get("due_date")
-        self.weight = assignment_dict.get("weight")
-        self.external_guid = assignment_dict.get("external_guid")
-        self.allow_resume = assignment_dict.get("allow_resume")
-        self.question_count = assignment_dict.get("question_count")
+    lms_assign_id: int = attr.ib(default=None)
+    assignment_name: str = attr.ib(default=None)
+    group_name: str = attr.ib(default=None)
+    assignment_description: str = attr.ib(default=None)
+    due_date: datetime = attr.ib(default=None, converter=timestamp_converter)
+    weight: str = attr.ib(default=None)
+    external_guid: str = attr.ib(default=None)
+    allow_resume: str = attr.ib(default=None)
+    question_count: int = attr.ib(default=None)
+    grade_column: str = attr.ib(default=None)
+    is_missing: bool = attr.ib(default=None)
+
+    @classmethod
+    def _process_dict(cls, data: dict, active_profile: "ActiveProfile") -> "ClassAssignment":
+
+        if data.get("is_missing") == "Y":
+            data["is_missing"] = True
+        else:
+            data["is_missing"] = False
+
+        return data
 
     def __str__(self):
         return (
@@ -69,3 +90,9 @@ class ClassAssignment:
 
     def __repr__(self):
         return f"{self.name}"
+
+    @property
+    def link(self) -> str:
+        """Returns the link to the assignment"""
+        print()
+        return f"https://www.oncourseconnect.com/#/lms/assignments/{self._active_profile}/{self.id}"

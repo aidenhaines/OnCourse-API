@@ -1,34 +1,37 @@
 from datetime import datetime, timedelta
-from typing import List
+from typing import TYPE_CHECKING, Any, Dict, List
 
+from attr import define
+
+from oncourse_api.models.base import OncourseObject
+
+import attr
 from .assignment import OverviewAssignment
 from .group import Class
 from .reportcard import ReportCard
 
+if TYPE_CHECKING:
+    from oncourse_api.models.active_profile import ActiveProfile
 
-class Student:
+
+@define()
+class Student(OncourseObject):
     """Make the organization better for student"""
 
-    def __init__(self, student: dict, school_id: int, school_year_id: int, active_profile, request_session):
-        self.__active_profile = active_profile
-        self.first_name: str = student.get("first_name")
-        self.last_name: str = student.get("last_name")
-        self.email: str = student.get("email")
-        self.phone: str = student.get("phone")
-        self.street_address1 = student.get("street_address1") if student.get("street_address1") != "" else None
-        self.street_address2 = student.get("street_address2") if student.get("street_address2") != "" else None
-        self.city = student.get("city") if student.get("city") != "" else None
-        self.state = student.get("state") if student.get("state") != "" else None
-        self.postal_code = student.get("postal_code") if student.get("postal_code") != "" else None
-        self.grade_level = student.get("grade_level") if student.get("grade_level") != "" else None
-        self.school_name = student.get("school") if student.get("school") != "" else None
-        self.id: int = student.get("id")
-        self.school_id = school_id
-        self.school_year_id = school_year_id
-        self.requestSession = request_session
-        self.student_portrait = (
-            f"https://www.oncourseconnect.com/json.axd/file/image?app=STUDENT_PORTRAITS&id={self.id}"
-        )
+    first_name: str = attr.ib(default=None)
+    last_name: str = attr.ib(default=None)
+    email: str = attr.ib(default=None)
+    phone: str = attr.ib(default=None)
+    street_address1: str = attr.ib(default=None)
+    street_address2: str = attr.ib(default=None)
+    city: str = attr.ib(default=None)
+    state: str = attr.ib(default=None)
+    postal_code: str = attr.ib(default=None)
+    grade_level: str = attr.ib(default=None)
+    school_name: str = attr.ib(default=None)
+    id: int = attr.ib(default=None)
+    school_id: int = attr.ib(default=None)
+    school_year_id: int = attr.ib(default=None)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
@@ -36,7 +39,7 @@ class Student:
     def __repr__(self):
         return f"{self.first_name} {self.last_name}"
 
-    def getReportCard(self) -> dict:
+    def getReportCard(self) -> ReportCard:
         # TODO Make model
         url = f"https://www.oncourseconnect.com/api/classroom/grades/report_cards?schoolId={self.school_id}&schoolYearId={self.school_year_id}&studentId={self.id}"
         report_card = (self.requestSession.get(url)).json()
@@ -60,32 +63,31 @@ class Student:
     @property
     def assignments(self) -> List["OverviewAssignment"]:
         """Returns list of overview assignments"""
+
         day = datetime.now()
-        start_time = datetime.strftime(
-            day - timedelta(days=self.__active_profile.classroom_todo_start_date_span), "%m/%d/%Y"
-        )  # start date is 1 week back
+        start_time = datetime.strftime(day - timedelta(days=7), "%m/%d/%Y")  # start date is 1 week back
         end_time = datetime.strftime(day + timedelta(days=365), "%m/%d/%Y")  # add 1 year in future
         url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_student_work_due?endDate={end_time}&startDate={start_time}&studentId={self.id}"
-        assignments = (self.requestSession.get(url)).json()
-        return [OverviewAssignment(a, self.requestSession) for a in assignments]
+        assignments = (self._active_profile.requestSession.get(url)).json()
+        return OverviewAssignment.from_list(assignments, self._active_profile)
 
     @property
     def other_student_data(self) -> List["OtherStudentData"]:
         url = f"https://www.oncourseconnect.com/api/classroom/dataelement/student_data_elements?studentId={self.id}"
-        other_student_data = (self.requestSession.get(url)).json()
+        other_student_data = (self._active_profile.requestSession.get(url)).json()
+        return OtherStudentData.from_list(other_student_data.get("data"), self._active_profile)
 
-        return [self.OtherStudentData(d) for d in other_student_data.get("data")]
 
-    class OtherStudentData:
-        def __init__(self, other_student_data: dict):
-            self.label = other_student_data.get("label")
-            self.sort_pos = other_student_data.get("sort_pos")
-            self.data_val = other_student_data.get("data_val")
-            self.last_modified_date = other_student_data.get("last_modified_date")
-            self.column = other_student_data.get("column")
+@define
+class OtherStudentData(OncourseObject):
+    label = attr.ib(default=None)
+    sort_pos = attr.ib(default=None)
+    data_val = attr.ib(default=None)
+    last_modified_date = attr.ib(default=None)
+    column = attr.ib(default=None)
 
-        def __repr__(self):
-            return f"{self.label}:{self.data_val}"
+    def __repr__(self):
+        return f"{self.label}:{self.data_val}"
 
-        def __str__(self):
-            return f"{self.label}:{self.data_val}"
+    def __str__(self):
+        return f"{self.label}:{self.data_val}"
