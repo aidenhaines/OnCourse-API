@@ -14,8 +14,8 @@ platformdirs = ">=2"
 regex = ">=2020.1.8"
 tomli = ">=0.2.6,<2.0.0"
 typing-extensions = [
-    {version = ">=3.10.0.0", markers = "python_version < \"3.10\""},
-    {version = "!=3.10.0.1", markers = "python_version >= \"3.10\""},
+    {version = ">=3.8.0.0", markers = "python_version < \"3.8\""},
+    {version = "!=3.8.0.1", markers = "python_version >= \"3.8\""},
 ]
 
 [package.extras]

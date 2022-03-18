@@ -1,12 +1,18 @@
-from typing import List
+from typing import List, Optional
+from requests import Session
 from oncourse_api.errors import NoAssignments
+import logging
 
 from .assignment import ClassAssignment
+
+logger_name = "oncourse_api"
+
+log = logging.getLogger(logger_name)
 
 
 class Class:
     def __init__(self, class_dict, student_id, request_session):
-        self.requestSession = request_session
+        self.requestSession: "Session" = request_session
         self.__student_id = student_id
         self.id: int = class_dict.get("id")
         self.name: str = class_dict.get("name")
@@ -30,13 +36,12 @@ class Class:
         return f"{self.name}"
 
     @property
-    def assignments(self) -> List["ClassAssignment"]:
+    def assignments(self) -> Optional[List["ClassAssignment"]]:
         """Returns a list of assignements in a class"""
-        url = (
-            "https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing"
-            f"?assignmentType=A&groupId={self.id}&studentId={self.__student_id}"
-        )
-        assignments = (self.requestSession.get(url)).json()
+        url = f"https://www.oncourseconnect.com/json.axd/classroom/lms/assignments/get_assignment_listing?assignmentType=A&groupId={self.id}&studentId={self.__student_id}"
+        resp = self.requestSession.get(url)
+        assignments = resp.json()
         if len(assignments) == 0:
-            raise NoAssignments(f"No assignments found for {self.name}")
-        return [ClassAssignment(a, self.requestSession) for a in assignments]
+            log.info(f"No assignments found for {self.name}")
+            return None
+        return [ClassAssignment(a, self.requestSession, self) for a in assignments]
